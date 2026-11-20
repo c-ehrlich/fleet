@@ -94,6 +94,27 @@ resource "aws_kinesis_firehose_delivery_stream" "test_stream" {
 
 For the latest configuration go to [HashiCorp's Terraform docs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream#splunk-destination).
 
+## Axiom
+
+Logs are sent to [Axiom](https://axiom.co) through its [Splunk HEC compatible API](https://axiom.co/docs/send-data/splunk-hec), using Fleet's Splunk plugin.
+
+- Plugin name: `splunk`
+- Flag namespace: [splunk](https://fleetdm.com/docs/deploying/configuration#splunk)
+
+In Axiom, create a dataset and an API token that can ingest into it. Then configure Fleet with the HEC URL of your Axiom [edge deployment](https://axiom.co/docs/reference/edge-deployments), the API token, and the dataset name as the index:
+
+```yaml
+osquery:
+  status_log_plugin: splunk
+  result_log_plugin: splunk
+splunk:
+  url: https://hec.us-east-1.aws.edge.axiom.co
+  token: your-axiom-api-token
+  index: your-axiom-dataset
+```
+
+Set `url` without a path or trailing slash. Fleet appends `/services/collector/event`.
+
 ## Amazon Kinesis Data Streams
 
 Logs are written to [Amazon Kinesis Data Streams (Kinesis)](https://aws.amazon.com/kinesis/data-streams).
